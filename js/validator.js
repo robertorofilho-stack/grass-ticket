@@ -147,9 +147,63 @@ function ensureThreeTasks(ticket, prefs) {
   };
 }
 
+
+function stripTaskLine(line) {
+  let s = String(line || "").trim();
+  if (!s) return "";
+  // Drop markdown fences / json-ish leftovers
+  if (/^```/.test(s) || /^[{}\[\],]$/.test(s)) return "";
+  s = s.replace(/^#+\s*/, "");
+  s = s.replace(/^[-*•]+\s+/, "");
+  s = s.replace(/^\d+[\).:\-]\s+/, "");
+  s = s.replace(/^\[\d+\]\s+/, "");
+  s = s.replace(/^["'`]+|["'`]+$/g, "");
+  s = s.replace(/\s+/g, " ").trim();
+  return s;
+}
+
+/**
+ * Tolerant parser for Gemma line lists (preferred over fragile JSON).
+ * Accepts "1. …", "1) …", "- …", bare lines. Returns a ticket-shaped object or null.
+ */
+function parseLineTasks(text, prefs) {
+  if (!text || typeof text !== "string") return null;
+  const minutes = Number(prefs && prefs.time) || 20;
+  const cleaned = text
+    .replace(/```(?:json|text)?/gi, "\n")
+    .replace(/```/g, "\n");
+  const lines = cleaned.split(/\r?\n/);
+  const tasks = [];
+  const seen = new Set();
+  for (const raw of lines) {
+    const s = stripTaskLine(raw);
+    if (!s) continue;
+    // Skip schema / meta chatter
+    if (/^(title|minutes|tasks|schema|json)\b/i.test(s)) continue;
+    if (/^[\{\}\[\],]/.test(s)) continue;
+    if (s.length < 12 || s.length > 180) continue;
+    const key = s.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const title = s.length > 56 ? s.slice(0, 53).trim() + "…" : s;
+    tasks.push({ title, text: s, minutes: Math.min(minutes, 20) });
+    if (tasks.length >= 3) break;
+  }
+  // Need at least two real lines; a lone apology/garbage line is not a ticket.
+  if (tasks.length < 2) return null;
+  return {
+    title: "Grass Ticket",
+    minutes,
+    tasks,
+    source: "model"
+  };
+}
+
 function validateAndGuard(modelText, prefs) {
-  const parsed = extractJsonObject(modelText);
-  const ticket = normalizeTicket(parsed, prefs);
+  let ticket = normalizeTicket(extractJsonObject(modelText), prefs);
+  if (!ticket) {
+    ticket = parseLineTasks(modelText, prefs);
+  }
   if (!ticket) {
     const { pickOfflineTicket } = getTasksApi();
     const offline = pickOfflineTicket(prefs || { time: 20 }, 3);
@@ -163,6 +217,8 @@ const Validator = {
   DANGEROUS_PATTERNS,
   SCREEN_PATTERNS,
   extractJsonObject,
+  parseLineTasks,
+  stripTaskLine,
   normalizeTicket,
   isDangerousTask,
   isScreenTask,

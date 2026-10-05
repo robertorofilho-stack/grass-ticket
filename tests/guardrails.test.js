@@ -160,3 +160,55 @@ describe("time calculation", () => {
     assert.match(list[0].ratio.summary, /19 min/);
   });
 });
+
+describe("line-list parser (Gemma-tolerant)", () => {
+  it("parses numbered outdoor lines into a 3-task model ticket", () => {
+    const raw =
+      "1. Walk one quiet block and notice five leaf shapes\n" +
+      "2. Sit on a park bench and count ten slow breaths\n" +
+      "3. Stretch gently on your doorstep facing a tree\n";
+    const result = Validator.validateAndGuard(raw, {
+      time: 20,
+      energy: "low",
+      company: "solo",
+      weather: "clear"
+    });
+    assert.equal(result.ok, true);
+    assert.equal(result.ticket.source, "model");
+    assert.equal(result.ticket.tasks.length, 3);
+    assert.match(result.ticket.tasks[0].text, /leaf/i);
+  });
+
+  it("strips bullets, quotes, and markdown then keeps three short tasks", () => {
+    const raw = [
+      "Here you go:",
+      "- **Walk around the block** noticing birds",
+      '* \"Sit under a tree and listen to wind\"',
+      "• Stretch on the balcony for three minutes",
+      "4. Extra ignored line about clouds"
+    ].join("\n");
+    const ticket = Validator.parseLineTasks(raw, { time: 20 });
+    assert.ok(ticket);
+    assert.equal(ticket.tasks.length, 3);
+    assert.equal(ticket.source, "model");
+    assert.doesNotMatch(ticket.tasks[0].text, /^\*\*/);
+  });
+
+  it("HEFESTO truncated JSON raw still fails clean parse (offline fill)", () => {
+    // Real Mini raw from webgpu-retest-gen-20261005-1612 (truncated / looping JSON)
+    const raw =
+      '```json\n{\n    "title": "Grass Ticket",\n    "minutes": 20,\n    "tasks": [\n        {\n' +
+      '            "title": "Time-limited - 20 minutes",\n' +
+      '            "text": "Set a time limit for the activity.  For example, 1 hour before the start of the event.  Consider a 15-minute break in the afternoon before the start of the event.  For example, 15 minutes before the start of the event.  The activity will be conducted at a community center with a covered area.  The activity is expected to be a children\'elike activity.  The event is scheduled for Saturday, October 20, 2023, from 10:00 to 15:00.  The event is located at the Old Mill Community Center.  The event is a family-friendly activity.  The event is expected to be a good opportunity to enjoy the outdoors and have fun.  The event is free.  The event is a family-friendly activity.  The event is expected to be a good opportunity to enjoy the outdoors and have fun.  The event is a family-friendly activity.  The';
+    const result = Validator.validateAndGuard(raw, {
+      time: 20,
+      energy: "medium",
+      company: "either",
+      weather: "any"
+    });
+    assert.equal(result.ok, false);
+    assert.equal(result.reason, "parse_failed");
+    assert.equal(result.ticket.source, "offline");
+    assert.equal(result.ticket.tasks.length, 3);
+  });
+});

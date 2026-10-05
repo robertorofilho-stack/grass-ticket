@@ -1,0 +1,63 @@
+loading q4…
+loaded_s 2.6
+--- gen 1 ---
+RAW:
+1. Find a nearby trail or marked area for a quick walk.
+2. Check the weather forecast for a possible day.
+3. A simple picnic is always a good idea!
+RESULT ok= true reason= ok source= model replaced= 0 noFallback= true gen_s= 1.5
+TASKS: Find a nearby trail or marked area for a quick walk. | Check the weather forecast for a possible day. | A simple picnic is always a good idea!
+--- gen 2 ---
+RAW:
+1. Head towards the next street and look for a sign that says "Welcome to [Your Town]"
+2. Check the sidewalk for a friendly face and a quick glance at the sky
+3. A common landmark is usually a park or a road sign
+
+RESULT ok= true reason= ok source= model replaced= 0 noFallback= true gen_s= 2.1
+TASKS: Head towards the next street and look for a sign that… | Check the sidewalk for a friendly face and a quick gl… | A common landmark is usually a park or a road sign
+--- gen 3 ---
+RAW:
+1. Find a scenic overlook and enjoy the view!
+2. Check out a nearby cafe for some delicious food and drinks.
+3. Pack a picnic to a park with friends or family.
+RESULT ok= true reason= ok source= model replaced= 0 noFallback= true gen_s= 1.0
+TASKS: Find a scenic overlook and enjoy the view! | Check out a nearby cafe for some delicious food and d… | Pack a picnic to a park with friends or family.
+--- gen 4 ---
+RAW:
+1. Check the sky for a few puffy clouds
+2. A quick look at the horizon reveals a few colorful spots
+3. Enjoy a picnic blanket and a frisbee
+
+RESULT ok= true reason= ok source= model replaced= 0 noFallback= true gen_s= 1.6
+TASKS: Check the sky for a few puffy clouds | A quick look at the horizon reveals a few colorful spots | Enjoy a picnic blanket and a frisbee
+--- gen 5 ---
+RAW:
+1. Find a nearby trail or scenic spot for a quick walk.
+2. Check the weather forecast for a possible day.
+3. A picnic is always a good idea!
+RESULT ok= true reason= ok source= model replaced= 0 noFallback= true gen_s= 1.6
+TASKS: Find a nearby trail or scenic spot for a quick walk. | Check the weather forecast for a possible day. | A picnic is always a good idea!
+SCORE_PURE_MODEL 5/5
+EXAMPLE_TICKET_JSON {
+  "title": "Grass Ticket",
+  "minutes": 20,
+  "tasks": [
+    {
+      "title": "Find a nearby trail or marked area for a quick walk.",
+      "text": "Find a nearby trail or marked area for a quick walk.",
+      "minutes": 20
+    },
+    {
+      "title": "Check the weather forecast for a possible day.",
+      "text": "Check the weather forecast for a possible day.",
+      "minutes": 20
+    },
+    {
+      "title": "A simple picnic is always a good idea!",
+      "text": "A simple picnic is always a good idea!",
+      "minutes": 20
+    }
+  ],
+  "source": "model",
+  "replaced": 0
+}

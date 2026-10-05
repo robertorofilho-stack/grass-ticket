@@ -100,21 +100,32 @@ const ModelRunner = {
   },
 
   buildPrompt(prefs) {
+    // Line lists beat JSON for Gemma 3 270M (JSON truncates / loops).
     return [
       {
         role: "system",
         content:
-          "You help people leave screens and do safe outdoor activities. " +
-          "Reply with ONLY a JSON object, no markdown. Schema: " +
-          '{"title":"string","minutes":number,"tasks":[{"title":"string","text":"string","minutes":number},' +
-          '{"title":"string","text":"string","minutes":number},{"title":"string","text":"string","minutes":number}]}. ' +
-          "Exactly 3 concrete outdoor tasks. No phones, apps, photos, traffic stunts, swimming, cliffs, strangers, trespassing, or alone-at-night."
+          "You suggest safe outdoor micro-activities. " +
+          "Reply with EXACTLY 3 short lines, numbered 1-3. One concrete outdoor task per line. " +
+          "Each line under 100 characters. No JSON, no markdown fences, no extra commentary. " +
+          "No phones, apps, swimming, cliffs, strangers, trespassing, or alone-at-night."
+      },
+      {
+        role: "user",
+        content: "Example: time=20 energy=low company=solo weather=clear"
+      },
+      {
+        role: "assistant",
+        content:
+          "1. Walk one quiet block and notice five different leaf shapes\n" +
+          "2. Sit on a park bench and count ten slow breaths\n" +
+          "3. Stretch gently on your doorstep facing a tree"
       },
       {
         role: "user",
         content:
-          `Create a Grass Ticket for: time=${prefs.time} minutes, energy=${prefs.energy}, ` +
-          `company=${prefs.company}, weather=${prefs.weather}. Tasks must fit the time budget together.`
+          `Now create 3 for: time=${prefs.time} minutes, energy=${prefs.energy}, ` +
+          `company=${prefs.company}, weather=${prefs.weather}. Keep them local and doable.`
       }
     ];
   },
@@ -140,9 +151,9 @@ const ModelRunner = {
     }
     const messages = this.buildPrompt(prefs);
     const out = await this.pipeline(messages, {
-      max_new_tokens: 256,
-      temperature: 0.4,
-      do_sample: true
+      max_new_tokens: 140,
+      do_sample: false,
+      repetition_penalty: 1.1
     });
     return this.extractAssistantText(out);
   }
