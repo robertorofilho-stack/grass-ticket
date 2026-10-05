@@ -1,0 +1,10 @@
+{
+  "name": "grass-ticket",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Open-weight Gemma in the browser mints outdoor micro-adventure tickets",
+  "scripts": {
+    "test": "node --test",
+    "start": "npx --yes serve ."
+  }
+}

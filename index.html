@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Grass Ticket — open-weight Gemma in your browser plans outdoor micro-adventures. Screen stays short." />
+  <title>Grass Ticket</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span id="mode-badge" class="badge degraded">Starting…</span>
+      <h1>Grass Ticket</h1>
+      <p>Three outdoor tasks. Open-weight Gemma runs in your browser. Then the screen goes quiet.</p>
+    </header>
+
+    <section id="view-form" class="card">
+      <div class="row">
+        <div>
+          <label for="pref-time">Time available</label>
+          <select id="pref-time">
+            <option value="10">10 minutes</option>
+            <option value="20" selected>20 minutes</option>
+            <option value="40">40 minutes</option>
+          </select>
+        </div>
+        <div>
+          <label for="pref-energy">Energy</label>
+          <select id="pref-energy">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="pref-company">Company</label>
+          <select id="pref-company">
+            <option value="solo">Solo</option>
+            <option value="companion">With someone</option>
+            <option value="either" selected>Either</option>
+          </select>
+        </div>
+        <div>
+          <label for="pref-weather">Weather (approx.)</label>
+          <select id="pref-weather">
+            <option value="any" selected>Any</option>
+            <option value="clear">Clear</option>
+            <option value="rain">Rain</option>
+            <option value="cold">Cold</option>
+            <option value="hot">Hot</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" id="btn-generate">Mint my Grass Ticket</button>
+      <button type="button" id="btn-skip-model" class="ghost">Skip model — use offline bank</button>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section id="view-ticket" class="card hidden">
+      <h2 id="ticket-title">Your Grass Ticket</h2>
+      <p id="ticket-meta" class="status"></p>
+      <div id="ticket-tasks"></div>
+      <button type="button" id="btn-start">I'm going outside — start timer</button>
+    </section>
+
+    <section id="view-timer" class="card hidden">
+      <p class="status" style="text-align:center">Outside time. Phone down if you can.</p>
+      <div id="timer-display" class="timer-display">0s</div>
+      <button type="button" id="btn-back" class="secondary">I'm back</button>
+    </section>
+
+    <section id="view-return" class="card hidden">
+      <h2>What did you do?</h2>
+      <div id="return-checks" class="checks"></div>
+      <button type="button" id="btn-finish">Save &amp; show screen vs outside</button>
+      <div id="ratio-box" class="hidden">
+        <p id="ratio-text" class="ratio"></p>
+        <p id="ratio-detail" class="status" style="text-align:center"></p>
+        <button type="button" id="btn-again" class="secondary">New ticket</button>
+      </div>
+    </section>
+
+    <section id="view-history" class="card">
+      <h2 style="font-size:1rem;margin:0 0 0.5rem">Local history</h2>
+      <div id="history-list"></div>
+    </section>
+
+    <footer>
+      Grass Ticket · Gemma 3 270M via Transformers.js · no accounts · no location · history in localStorage only<br />
+      Built for Hacktoberfest 2026 · Touch Grass · by &lt;APELIDO&gt;
+    </footer>
+  </div>
+
+  <script src="js/tasks.js"></script>
+  <script src="js/validator.js"></script>
+  <script src="js/time.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
