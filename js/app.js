@@ -21,7 +21,12 @@ const state = {
 
 function show(name) {
   Object.entries(views).forEach(([k, el]) => {
-    if (el) el.classList.toggle("hidden", k !== name);
+    if (!el) return;
+    if (k === "history") {
+      el.classList.toggle("hidden", name === "timer");
+      return;
+    }
+    el.classList.toggle("hidden", k !== name);
   });
   document.body.classList.toggle("dark-mode", name === "timer");
 }
@@ -33,7 +38,7 @@ function setBadge(mode, detail) {
   if (mode === "gemma") {
     el.textContent = `Gemma 3 270M · ${detail || "browser"}`;
   } else if (mode === "loading") {
-    el.textContent = "Loading open-weight model…";
+    el.textContent = "Loading Gemma…";
   } else {
     el.textContent = `Offline bank · ${detail || "degraded mode"}`;
   }
@@ -49,7 +54,7 @@ function readPrefs() {
 }
 
 function renderTicket(ticket) {
-  $("#ticket-title").textContent = ticket.title || "Your Grass Ticket";
+  $("#ticket-title").textContent = ticket.title || "Your ticket";
   const list = $("#ticket-tasks");
   list.innerHTML = "";
   ticket.tasks.forEach((t, i) => {
@@ -59,8 +64,8 @@ function renderTicket(ticket) {
     list.appendChild(div);
   });
   $("#ticket-meta").textContent =
-    `${ticket.minutes} min window · source: ${ticket.source || "unknown"}` +
-    (ticket.replaced ? ` · ${ticket.replaced} suggestion(s) replaced by safety filter` : "");
+    `${ticket.minutes} min · ${ticket.source || "unknown"}` +
+    (ticket.replaced ? ` · ${ticket.replaced} line(s) swapped for safety` : "");
 }
 
 function escapeHtml(s) {
@@ -88,7 +93,7 @@ async function onGenerate() {
   btn.disabled = true;
   state.prefs = readPrefs();
   startScreenClock();
-  status.textContent = "Preparing ticket…";
+  status.textContent = "Minting…";
 
   let rawText = null;
   let usedModel = false;
@@ -96,12 +101,12 @@ async function onGenerate() {
   if (ModelRunner.status === "ready" || ModelRunner.status === "idle" || ModelRunner.status === "loading") {
     try {
       setBadge("loading");
-      status.textContent = "Running Gemma 3 270M in your browser (first load may take a while)…";
+      status.textContent = "Running Gemma in this tab (first download can take a bit)…";
       rawText = await ModelRunner.generate(state.prefs, (info) => {
         if (info && info.progress != null) {
           const p = Number(info.progress);
           const pct = p > 1 ? Math.round(p) : Math.round(p * 100);
-          status.textContent = `Downloading model… ${Math.min(100, Math.max(0, pct))}%`;
+          status.textContent = `Downloading Gemma… ${Math.min(100, Math.max(0, pct))}%`;
         } else if (info && info.message) {
           status.textContent = info.message;
         }
@@ -110,7 +115,7 @@ async function onGenerate() {
       state.mode = "gemma";
       setBadge("gemma", ModelRunner.device);
     } catch (err) {
-      status.textContent = `Model unavailable (${err.message || err}). Using offline bank.`;
+      status.textContent = `Gemma didn’t load (${err.message || err}). Using the offline bank.`;
       state.mode = "offline";
       setBadge("offline", "model failed to load");
     }
@@ -197,14 +202,14 @@ function showHistory() {
             )}</div>`
         )
         .join("")
-    : "<div class='history-item'>No tickets yet.</div>";
+    : "<div class='history-item'>No tickets yet. One walk away.</div>";
 }
 
 function onSkipModel() {
   ModelRunner.status = "degraded";
   setBadge("offline", "skipped model load");
   const status = $("#status");
-  if (status) status.textContent = "Using offline bank (model skipped).";
+  if (status) status.textContent = "Offline bank it is.";
 }
 
 async function tryPreload() {
@@ -219,11 +224,11 @@ async function tryPreload() {
       }
     });
     setBadge("gemma", ModelRunner.device);
-    $("#status").textContent = "Model ready in-browser.";
+    $("#status").textContent = "Gemma is ready in this tab.";
   } catch (err) {
     setBadge("offline", "degraded — offline bank active");
     $("#status").textContent =
-      "Open-weight model did not load. App works with the offline task bank.";
+      "Gemma didn’t load. The offline bank still works.";
   }
 }
 

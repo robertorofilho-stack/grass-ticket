@@ -3,30 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Grass Ticket — open-weight Gemma in your browser plans outdoor micro-adventures. Screen stays short." />
-  <title>Grass Ticket</title>
+  <meta name="description" content="Open-weight Gemma in your browser mints a 3-task outdoor ticket. Then a quiet timer. No accounts, no location." />
+  <meta name="theme-color" content="#070b09" />
+  <meta property="og:title" content="Grass Ticket · three tasks, then go" />
+  <meta property="og:description" content="Gemma runs in your browser, writes three outdoor tasks, then the screen gets out of the way." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://robertorofilho-stack.github.io/grass-ticket/" />
+  <meta property="og:image" content="https://robertorofilho-stack.github.io/grass-ticket/docs/cover-dev.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Grass Ticket · three tasks, then go" />
+  <meta name="twitter:description" content="Gemma runs in your browser, writes three outdoor tasks, then the screen gets out of the way." />
+  <meta name="twitter:image" content="https://robertorofilho-stack.github.io/grass-ticket/docs/cover-dev.png" />
+  <title>Grass Ticket · three tasks, then go</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
   <div class="wrap">
-    <header>
-      <span id="mode-badge" class="badge degraded">Starting…</span>
-      <h1>Grass Ticket</h1>
-      <p>Three outdoor tasks. Open-weight Gemma runs in your browser. Then the screen goes quiet.</p>
+    <header class="site-header">
+      <div class="brand-row">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Alfa Labs</span>
+      </div>
+      <span id="mode-badge" class="badge degraded" aria-live="polite">Starting…</span>
+      <p class="kicker copy-kicker">Your ticket out the door</p>
+      <h1 class="copy-headline">Grass Ticket</h1>
+      <p class="lede copy-subhead">Pick a few prefs. An open-weight Gemma model, running in this tab, mints three outdoor tasks. Then the screen goes quiet on purpose.</p>
     </header>
 
-    <section id="view-form" class="card">
+    <section id="view-form" class="card card-form">
+      <p class="eyebrow copy-form-eyebrow">Set your window</p>
       <div class="row">
-        <div>
-          <label for="pref-time">Time available</label>
+        <div class="field">
+          <label for="pref-time" class="copy-label-time">Time</label>
           <select id="pref-time">
-            <option value="10">10 minutes</option>
-            <option value="20" selected>20 minutes</option>
-            <option value="40">40 minutes</option>
+            <option value="10">10 min</option>
+            <option value="20" selected>20 min</option>
+            <option value="40">40 min</option>
           </select>
         </div>
-        <div>
-          <label for="pref-energy">Energy</label>
+        <div class="field">
+          <label for="pref-energy" class="copy-label-energy">Energy</label>
           <select id="pref-energy">
             <option value="low">Low</option>
             <option value="medium" selected>Medium</option>
@@ -35,16 +57,16 @@
         </div>
       </div>
       <div class="row">
-        <div>
-          <label for="pref-company">Company</label>
+        <div class="field">
+          <label for="pref-company" class="copy-label-company">Company</label>
           <select id="pref-company">
-            <option value="solo">Solo</option>
+            <option value="solo">Just me</option>
             <option value="companion">With someone</option>
-            <option value="either" selected>Either</option>
+            <option value="either" selected>Either works</option>
           </select>
         </div>
-        <div>
-          <label for="pref-weather">Weather (approx.)</label>
+        <div class="field">
+          <label for="pref-weather" class="copy-label-weather">Weather</label>
           <select id="pref-weather">
             <option value="any" selected>Any</option>
             <option value="clear">Clear</option>
@@ -54,43 +76,69 @@
           </select>
         </div>
       </div>
-      <button type="button" id="btn-generate">Mint my Grass Ticket</button>
-      <button type="button" id="btn-skip-model" class="ghost">Skip model — use offline bank</button>
-      <p id="status" class="status"></p>
+      <button type="button" id="btn-generate" class="copy-btn-generate">Mint ticket</button>
+      <button type="button" id="btn-skip-model" class="ghost copy-btn-skip">Skip model</button>
+      <p class="helper copy-skip-helper">Use the offline task bank instead.</p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
-    <section id="view-ticket" class="card hidden">
-      <h2 id="ticket-title">Your Grass Ticket</h2>
-      <p id="ticket-meta" class="status"></p>
-      <div id="ticket-tasks"></div>
-      <button type="button" id="btn-start">I'm going outside — start timer</button>
+    <section id="how-it-works" class="card card-how" aria-labelledby="how-title">
+      <h2 id="how-title" class="history-heading">How it works</h2>
+      <ol class="how-list">
+        <li><strong>Shape the outing</strong> — time, energy, company, rough weather. No location.</li>
+        <li><strong>Gemma mints a ticket</strong> — three outdoor tasks in this browser. Or skip and use the offline bank.</li>
+        <li><strong>Go.</strong> A dark, quiet timer. The interesting part is outside.</li>
+        <li><strong>Come back</strong> — check off what you did. See screen vs outside.</li>
+      </ol>
     </section>
 
-    <section id="view-timer" class="card hidden">
-      <p class="status" style="text-align:center">Outside time. Phone down if you can.</p>
-      <div id="timer-display" class="timer-display">0s</div>
-      <button type="button" id="btn-back" class="secondary">I'm back</button>
-    </section>
-
-    <section id="view-return" class="card hidden">
-      <h2>What did you do?</h2>
-      <div id="return-checks" class="checks"></div>
-      <button type="button" id="btn-finish">Save &amp; show screen vs outside</button>
-      <div id="ratio-box" class="hidden">
-        <p id="ratio-text" class="ratio"></p>
-        <p id="ratio-detail" class="status" style="text-align:center"></p>
-        <button type="button" id="btn-again" class="secondary">New ticket</button>
+    <section id="view-ticket" class="card card-ticket boarding-pass hidden">
+      <div class="pass-stub" aria-hidden="true">
+        <span class="stub-code">GT</span>
+        <span class="stub-label">OUTDOOR</span>
+      </div>
+      <div class="pass-body">
+        <p class="eyebrow copy-ticket-eyebrow">Boarding pass</p>
+        <h2 id="ticket-title" class="copy-ticket-title">Your ticket</h2>
+        <p id="ticket-meta" class="status ticket-meta"></p>
+        <div id="ticket-tasks" class="ticket-tasks"></div>
+        <button type="button" id="btn-start" class="copy-btn-start">I'm going</button>
       </div>
     </section>
 
-    <section id="view-history" class="card">
-      <h2 style="font-size:1rem;margin:0 0 0.5rem">Local history</h2>
+    <section id="view-timer" class="card card-timer hidden">
+      <p class="timer-hint copy-timer-hint">Outside time. Phone down if you can.</p>
+      <div id="timer-display" class="timer-display" aria-live="off">0s</div>
+      <button type="button" id="btn-back" class="secondary copy-btn-back">I'm back</button>
+    </section>
+
+    <section id="view-return" class="card card-return hidden">
+      <p class="eyebrow copy-return-eyebrow">Check-in</p>
+      <h2 class="copy-return-title">What did you do?</h2>
+      <div id="return-checks" class="checks"></div>
+      <button type="button" id="btn-finish" class="copy-btn-finish">Save ratio</button>
+      <div id="ratio-box" class="ratio-box hidden">
+        <p id="ratio-text" class="ratio"></p>
+        <p id="ratio-detail" class="status ratio-detail"></p>
+        <button type="button" id="btn-again" class="secondary copy-btn-again">New ticket</button>
+      </div>
+    </section>
+
+    <section id="view-history" class="card card-history">
+      <h2 class="history-heading copy-history-title">Past tickets</h2>
       <div id="history-list"></div>
     </section>
 
-    <footer>
-      Grass Ticket · Gemma 3 270M via Transformers.js · no accounts · no location · history in localStorage only<br />
-      Built for Hacktoberfest 2026 · Touch Grass · by &lt;APELIDO&gt;
+    <section id="privacy-blurb" class="card card-blurb">
+      <h2 class="history-heading">Privacy &amp; safety</h2>
+      <p class="blurb-text">Nothing about your walk is uploaded for inference. Preferences stay on this device. Network needs: one-time model download and Transformers.js. No analytics, no accounts, no geolocation. History lives in localStorage.</p>
+      <p class="blurb-text">Every model suggestion passes a plain-code checker. Unsafe lines are swapped from a curated offline bank. The filter is a heuristic — use judgment outdoors.</p>
+    </section>
+
+    <footer class="site-footer">
+      <p class="copy-footer-tech">Grass Ticket · Alfa Labs · Gemma 3 270M via Transformers.js · no accounts · no location · history stays in localStorage</p>
+      <p class="copy-footer-credit">Hacktoberfest 2026 · Touch Grass · MIT · <a href="https://github.com/robertorofilho-stack/grass-ticket">source on GitHub</a></p>
+      <p class="copy-footer-gemma">Gemma 3 by Google · Transformers.js by Hugging Face · Use of Gemma is subject to the <a href="https://ai.google.dev/gemma/terms">Gemma Terms of Use</a>.</p>
     </footer>
   </div>
 
