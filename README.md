@@ -14,8 +14,8 @@ Most “go outside” apps want you to keep looking at them: maps, streaks, feed
 ## How it works
 
 1. You pick time (10 / 20 / 40 minutes), energy, company, and rough weather. **No location** is asked for or sent anywhere.
-2. **Gemma 3 270M Instruct** (q4 ONNX, [`onnx-community/gemma-3-270m-it-ONNX`](https://huggingface.co/onnx-community/gemma-3-270m-it-ONNX)) runs in the page through [Transformers.js](https://huggingface.co/docs/transformers.js) — **WebGPU** when available, **WASM** otherwise. After the first download the weights are cached by the browser.
-3. A plain-code checker in [`js/validator.js`](js/validator.js) reads every model reply before you see it: JSON parse, exactly three tasks, and filters that block traffic stunts, deep water, heights, strangers, trespassing, alone-at-night, and screen/phone tasks. Bad lines are swapped from a curated offline bank (40+ tasks in [`js/tasks.js`](js/tasks.js)).
+2. **Gemma 3 270M Instruct** (ONNX, `q4f16` on WebGPU / `fp16` on WASM, [`onnx-community/gemma-3-270m-it-ONNX`](https://huggingface.co/onnx-community/gemma-3-270m-it-ONNX)) runs in the page through [Transformers.js](https://huggingface.co/docs/transformers.js) 4.3.0 — **WebGPU** when available, **WASM** otherwise. After the first download the weights are cached by the browser.
+3. A plain-code checker in [`js/validator.js`](js/validator.js) reads every model reply before you see it: a tolerant parser for the three numbered lines Gemma writes (JSON is accepted too), exactly three tasks, and filters that block traffic stunts, deep water, heights, strangers, trespassing, alone-at-night, and screen/phone tasks. Bad lines are swapped from a curated offline bank (40+ tasks in [`js/tasks.js`](js/tasks.js)).
 4. **I'm going** opens a minimal dark timer. **I'm back** lets you check off tasks and shows screen vs outside time.
 5. Prefer not to wait for the model? **Skip model** uses the offline bank immediately. Degraded mode is a first-class path, not a crash.
 
@@ -42,7 +42,7 @@ Zero npm dependencies for tests. From the project root:
 node --test
 ```
 
-Covers the offline bank, JSON parse/normalize, safety and screen filters, fallback/repair, and screen-vs-outside time math (`tests/guardrails.test.js`).
+Covers the offline bank, line and JSON parsing, safety and screen filters, fallback/repair, and screen-vs-outside time math (`tests/guardrails.test.js`).
 
 ## Deploy (GitHub Pages)
 
@@ -57,7 +57,7 @@ A workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publi
 
 ## Honest limitations
 
-- Gemma 3 270M is small; JSON can be messy — that is why the validator and offline bank exist
+- Gemma 3 270M is small and its output can be messy — that is why it writes plain numbered lines and why the validator and offline bank exist
 - Headless / no-GPU environments often cannot run the model; offline mode is expected there
 - Safety filters are regex-based heuristics, not a promise of perfect safety — use judgment outdoors
 - Not health, fitness, or legal advice
@@ -69,7 +69,7 @@ A workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publi
 | `index.html`, `css/style.css` | Single page UI |
 | `js/app.js` | Views, timer, history, badge/status |
 | `js/model.js` | Transformers.js load + Gemma generate (WebGPU → WASM) |
-| `js/validator.js` | JSON extract, danger/screen filters, ensure-three-tasks |
+| `js/validator.js` | Line/JSON parsing, danger/screen filters, ensure-three-tasks |
 | `js/tasks.js` | Offline task bank (40+) and ticket picker |
 | `js/time.js` | Duration format + screen/outside ratio + history |
 | `tests/guardrails.test.js` | Node test suite |
