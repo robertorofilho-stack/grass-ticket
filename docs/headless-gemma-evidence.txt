@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "text": "```json\n{\n  \"title\": \"t\",\n  \"minutes\": 20,\n  \"tasks\": [\n    {\n      \"title\": \"a\",\n      \"text\": \"walk outside\"\n    },\n    {\n      \"title\": \"b\",\n      \"text\": \"sit on a bench\"\n    },\n    {\n      \"title\": \"c\",\n      \"text\": \"look at trees\"\n    }\n  ]\n}\n```",
+  "err": null,
+  "log": "starting\u2026\nimport https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0/+esm\nlibrary ok, loading wasm/fp16\u2026\nprogress config.json 100%\nprogress tokenizer_config.json 100%\nprogress generation_config.json 100%\nprogress onnx/model_fp16.onnx 100%\nprogress onnx/model_fp16.onnx_data 100%\nprogress tokenizer.json 100%\nprogress onnx/model_fp16.onnx_data 100%\nLOADED wasm/fp16 in 58.2s\nGEN in 20.4s\nGENERATED_TEXT_START\n```json\n{\n  \"title\": \"t\",\n  \"minutes\": 20,\n  \"tasks\": [\n    {\n      \"title\": \"a\",\n      \"text\": \"walk outside\"\n    },\n    {\n      \"title\": \"b\",\n      \"text\": \"sit on a bench\"\n    },\n    {\n      \"title\": \"c\",\n      \"text\": \"look at trees\"\n    }\n  ]\n}\n```\nGENERATED_TEXT_END\nSTATUS_OK"
+}

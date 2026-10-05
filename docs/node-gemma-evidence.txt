@@ -1,0 +1,45 @@
+pkg=@huggingface/transformers@4.3.0 dtype=q4 device=cpu(onnxruntime-node)
+loaded_s 2.4
+gen_s 4.9
+GENERATED_TEXT_START
+```json
+{
+    "title": "Grass Ticket",
+    "minutes": 20,
+    "tasks": [
+        {
+            "title": "Time",
+            "minutes": 20,
+            "tasks": [
+                {
+                    "title": "Time",
+                    "minutes": 20,
+                    "tasks": [
+                        "Time",
+                        "Time",
+                        "Time"
+                    ]
+                }
+                // Time",
+                "Time",
+                "Time",
+                "Time"
+                ]
+            ]
+        }
+    ],
+    "time_budget": 3
+    "company": "either",
+    "weather": "any"
+}
+}
+```
+GENERATED_TEXT_END
+VALIDATOR_OK false reason parse_failed source offline
+TASK_TITLES Front-step stretch | Shadow stretch | Rain puddle walk
+
+--- also q4f16 on Node (WebGPU weight set) ---
+loading q4f16…
+loaded_s 21.8
+TEXT Say hi!  😊
+
